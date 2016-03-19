@@ -10,12 +10,12 @@ Menu, tray, add, Dotabuff
 Menu, tray, add
 Menu, tray, add, Rosh, Rosh
 Menu, tray, add
-Menu, tray, add, Open autoexec.cfg, autoexec.cfg
+Menu, tray, add, Open cfg folder, autoexec.cfg
 Menu, tray, add, Exit
 ;Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
 
-Version=v1.1
-IniRead, RunAtStart, %A_temp%\d2a.ini, Config, RunAtStart, 0
+Version=v1.2
+IniRead, RunAtStart, %A_MyDocuments%\d2a.ini, Config, RunAtStart, 0
 if RunAtStart {
 FileCreateShortcut , %A_ScriptDir%\%A_ScriptName%, %A_Startup%\D2A.lnk
 } else{
@@ -23,12 +23,12 @@ IfExist %A_Startup%\D2A.lnk
 FileDelete, %A_Startup%\D2A.lnk
 }
 
-IniRead, accepter, %A_temp%\d2a.ini, Config, Accepter, F11
-IniRead, rageq, %A_temp%\d2a.ini, Config, RageQuit, !F4
+IniRead, accepter, %A_MyDocuments%\d2a.ini, Config, Accepter, F11
+IniRead, rageq, %A_MyDocuments%\d2a.ini, Config, RageQuit, !F4
 
-IniRead, PosX, %A_temp%\d2a.ini, Config, Custom PosX, %A_Space%
-IniRead, PosY, %A_temp%\d2a.ini, Config, Custom PosY, %A_Space%
-IniRead, AcceptMethod, %A_temp%\d2a.ini, Config, AcceptMethod, 1
+IniRead, PosX, %A_MyDocuments%\d2a.ini, Config, Custom PosX, %A_Space%
+IniRead, PosY, %A_MyDocuments%\d2a.ini, Config, Custom PosY, %A_Space%
+IniRead, AcceptMethod, %A_MyDocuments%\d2a.ini, Config, AcceptMethod, 1
 
 if (AcceptMethod==1){
 AcceptMethod1:=1
@@ -50,12 +50,12 @@ gojoin:=!gojoin
 if gojoin
 {
 if (!PosX){
-x:=A_ScreenWidth*.4
+x:=A_ScreenWidth*.5
 } else {
 x:=PosX
 }
 if (!PosY){
-y:=A_ScreenHeight*.497
+y:=A_ScreenHeight*.4907
 } else {
 y:=PosY
 }
@@ -87,6 +87,7 @@ Click
 return
 
 Config:
+Gui, Destroy
 gui, font, s10 w500
 
 Gui, Add, Hotkey, vaccepter x5 y5 w50 h20 , %accepter%
@@ -114,12 +115,12 @@ return
 
 saveconfig:
 gui, submit
-IniWrite,%accepter%, %A_temp%\d2a.ini, Config, Accepter
-IniWrite,%rageq%, %A_temp%\d2a.ini, Config, RageQuit
-IniWrite, %RunatStart%, %A_temp%\d2a.ini, Config, RunatStart
-IniWrite,%NewPosX%, %A_temp%\d2a.ini, Config, Custom PosX
-IniWrite,%NewPosY%, %A_temp%\d2a.ini, Config, Custom PosY
-IniWrite,%AcceptMethod%, %A_temp%\d2a.ini, Config, AcceptMethod
+IniWrite,%accepter%, %A_MyDocuments%\d2a.ini, Config, Accepter
+IniWrite,%rageq%, %A_MyDocuments%\d2a.ini, Config, RageQuit
+IniWrite, %RunatStart%, %A_MyDocuments%\d2a.ini, Config, RunatStart
+IniWrite,%NewPosX%, %A_MyDocuments%\d2a.ini, Config, Custom PosX
+IniWrite,%NewPosY%, %A_MyDocuments%\d2a.ini, Config, Custom PosY
+IniWrite,%AcceptMethod%, %A_MyDocuments%\d2a.ini, Config, AcceptMethod
 if RunAtStart {
 FileCreateShortcut , %A_ScriptDir%\%A_ScriptName%, %A_Startup%\D2A.lnk
 } else{
@@ -153,24 +154,28 @@ return
 
 SteamIdFinder:
 FileRead, Contents, %SteamPath%\logs\connection_log.txt
-FoundPos := RegExMatch(Contents, "(?<=\[U:\d:)(\d+)(?=\] 'OK')", SteamID, -1200)
+StringGetPos, pos, Contents,ConnectionCompleted(),R,1
+FoundPos := RegExMatch(Contents, "(?<=\[U:\d:)(\d+)(?=\] 'OK')", SteamID, pos)
 Run https://steamid.xyz/%SteamID%
 return
 
 Dotabuff:
 FileRead, Contents, %SteamPath%\logs\connection_log.txt
-FoundPos := RegExMatch(Contents, "(?<=\[U:\d:)(\d+)(?=\] 'OK')", SteamID, -1200)
+StringGetPos, pos, Contents,ConnectionCompleted(),R,1
+FoundPos := RegExMatch(Contents, "(?<=\[U:\d:)(\d+)(?=\] 'OK')", SteamID, pos)
 Run http://www.dotabuff.com/players/%SteamID%
 return
 
 autoexec.cfg:
-Run, Notepad.exe %SteamPath%/SteamApps/common/dota 2 beta/dota/cfg/autoexec.cfg
+;FileAppend, , %SteamPath%\steamapps\common\dota 2 beta\game\dota\cfg\autoexec.cfg
+;Run, Notepad.exe %SteamPath%\steamapps\common\dota 2 beta\game\dota\cfg\autoexec.cfg
+Run, Explore %SteamPath%/steamapps/common/dota 2 beta/game/dota/cfg
 return
 
 
 UpdateCheck:
-UrlDownloadToFile, https://dl.dropboxusercontent.com/u/45755423/D2A/latestD2A.html, %A_Temp%\latestD2A.html
-FileReadLine, NetVer, %A_Temp%\latestD2A.html, 1
+UrlDownloadToFile, https://dl.dropboxusercontent.com/u/45755423/D2A/latestD2A.html, %A_MyDocuments%\latestD2A.html
+FileReadLine, NetVer, %A_MyDocuments%\latestD2A.html, 1
 If (Version <> NetVer)
 {
    ;MsgBox, 4,Check for update, %NetVer% is available! `nWould you like to download new version?
