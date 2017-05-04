@@ -3,7 +3,7 @@ Dota2 Accepter - is a simple autohotkey based program that will left click on Ac
 
 Note: Only for small purposes - like drinking/pee! Don't stay afk for long!!!
 
-##Guide
+## Guide
 
 1. Run Dota2 and Dota2Accepter
 2. Press Find Match
